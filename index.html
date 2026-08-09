@@ -39,7 +39,7 @@
       border-radius: 4px;
       box-sizing: border-box;
     }
-    button {
+    .btn-primary {
       background-color: #d92525;
       color: #ffffff;
       border: none;
@@ -49,8 +49,28 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    button:hover {
+    .btn-primary:hover {
       background-color: #b01c1c;
+    }
+    .btn-copy {
+      background-color: #0056b3;
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+    .btn-copy:hover {
+      background-color: #003d80;
+    }
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
     }
     .email-container {
       background: #ffffff;
@@ -69,16 +89,12 @@
       font-size: 14px;
       border: 1px solid #d0d7de;
     }
-    .url-text {
-      color: #0056b3;
-      word-break: break-all;
-    }
   </style>
 </head>
 <body>
 
   <h2>🇨🇦 Canadian Citizenship Client Email Generator</h2>
-  <p>Fill in the client's information to generate a structured email with forms, official link URLs, exact document sources, and IRCC fees.</p>
+  <p>Fill in the client's information to generate a structured email with forms, official link URLs, and exact document sources.</p>
 
   <div class="form-card">
     <div class="form-group">
@@ -101,93 +117,117 @@
       </label>
     </div>
 
-    <button onclick="generateEmail()">Generate Client Email</button>
+    <button class="btn-primary" onclick="generateEmail()">Generate Client Email</button>
   </div>
 
   <div id="resultsArea" style="display:none;">
-    <h3>Generated Email Output:</h3>
+    <div class="results-header">
+      <h3 style="margin: 0;">Generated Email Output:</h3>
+      <button class="btn-copy" id="copyBtn" onclick="copyEmailToClipboard()">📋 Copy Email Text</button>
+    </div>
     <div class="email-container" id="emailBody"></div>
   </div>
 
   <script>
+    let rawTextContent = "";
+
     function generateEmail() {
       const name = document.getElementById('clientName').value.trim() || 'Client';
       const gens = parseInt(document.getElementById('generations').value);
       const nameChange = document.getElementById('nameChange').checked;
 
-      let text = `<div class="email-header"><strong>Subject:</strong> Action Required: Checklist & Forms for Your Canadian Citizenship Application</div>`;
+      // Header block
+      let htmlHeader = `<div class="email-header"><strong>Subject:</strong> Action Required: Checklist & Forms for Your Canadian Citizenship Application</div>`;
       
-      text += `Dear ${name},\n\n`;
-      text += `Thank you for reaching out regarding your application for a Canadian Citizenship Certificate (Proof of Citizenship).\n\n`;
-      text += `Based on your lineage (${gens} generation(s) back to your Canadian ancestor), below is the complete breakdown of the official IRCC forms to submit, government filing fees, and the exact documents you need to obtain along with where to get them.\n\n`;
-
-      text += `--------------------------------------------------\n`;
-      text += `1. OFFICIAL IRCC APPLICATION FORMS & FEES\n`;
-      text += `--------------------------------------------------\n\n`;
+      // Plain text content for clipboard copying
+      rawTextContent = `Subject: Action Required: Checklist & Forms for Your Canadian Citizenship Application\n\n`;
       
-      text += `• Main Application Form:\n`;
-      text += `  Form CIT 0001 (Application for a Citizenship Certificate)\n`;
-      text += `  Download URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/cit0001.html\n\n`;
+      let bodyText = `Dear ${name},\n\n`;
+      bodyText += `Thank you for reaching out regarding your application for a Canadian Citizenship Certificate (Proof of Citizenship).\n\n`;
+      bodyText += `Based on your lineage (${gens} generation(s) back to your Canadian ancestor), below is the complete breakdown of the official IRCC forms to submit and the exact documents you need to obtain along with where to get them.\n\n`;
 
-      text += `• IRCC Government Processing Fee:\n`;
-      text += `  Fee Amount: $75.00 CAD per applicant\n`;
-      text += `  Where to Pay: IRCC Official Pay Fee Portal\n`;
-      text += `  Payment URL: https://www.cic.gc.ca/english/information/fees/index.asp\n\n`;
+      bodyText += `--------------------------------------------------\n`;
+      bodyText += `1. OFFICIAL IRCC APPLICATION FORMS & PAYMENT PORTAL\n`;
+      bodyText += `--------------------------------------------------\n\n`;
+      
+      bodyText += `• Main Application Form:\n`;
+      bodyText += `  Form CIT 0001 (Application for a Citizenship Certificate)\n`;
+      bodyText += `  Download URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/cit0001.html\n\n`;
 
-      text += `--------------------------------------------------\n`;
-      text += `2. REQUIRED SUPPORTING DOCUMENTS TO OBTAIN\n`;
-      text += `--------------------------------------------------\n\n`;
+      bodyText += `• IRCC Official Fee Payment Portal:\n`;
+      bodyText += `  Payment URL: https://www.cic.gc.ca/english/information/fees/index.asp\n\n`;
+
+      bodyText += `--------------------------------------------------\n`;
+      bodyText += `2. REQUIRED SUPPORTING DOCUMENTS TO OBTAIN\n`;
+      bodyText += `--------------------------------------------------\n\n`;
 
       // Applicant Docs
-      text += `• APPLICANT IDENTIFICATION:\n`;
-      text += `  - Document: Long-Form US Birth Certificate (Must list parents' names)\n`;
-      text += `    Where to Get: State Department of Vital Statistics or online via VitalChek\n`;
-      text += `    URL: https://www.vitalchek.com\n`;
-      text += `    Estimated Fee: $15–$35 USD (varies by state)\n\n`;
+      bodyText += `• APPLICANT IDENTIFICATION:\n`;
+      bodyText += `  - Document: Long-Form US Birth Certificate (Must list parents' names)\n`;
+      bodyText += `    Where to Get: State Department of Vital Statistics or online via VitalChek\n`;
+      bodyText += `    URL: https://www.vitalchek.com\n\n`;
 
-      text += `  - Document: Two (2) Primary Photo IDs (e.g., Unexpired US Passport & Driver's License)\n`;
-      text += `    Where to Get: US Department of State / Local State DMV\n`;
-      text += `    URL: https://travel.state.gov\n\n`;
+      bodyText += `  - Document: Two (2) Primary Photo IDs (e.g., Unexpired US Passport & Driver's License)\n`;
+      bodyText += `    Where to Get: US Department of State / Local State DMV\n`;
+      bodyText += `    URL: https://travel.state.gov\n\n`;
 
-      text += `  - Document: Two (2) Official Canadian Citizenship Photos\n`;
-      text += `    Where to Get: Professional Photo Studio (Must strictly meet 50 mm x 70 mm IRCC specs)\n`;
-      text += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/preparation/take-photos.html\n`;
-      text += `    Estimated Fee: $15–$25 USD\n\n`;
+      bodyText += `  - Document: Two (2) Official Canadian Citizenship Photos\n`;
+      bodyText += `    Where to Get: Professional Photo Studio (Must strictly meet 50 mm x 70 mm IRCC specs)\n`;
+      bodyText += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/preparation/take-photos.html\n\n`;
 
       if (nameChange) {
-        text += `• PROOF OF LEGAL NAME CHANGE:\n`;
-        text += `  - Document: Official Marriage Certificate or Court Order\n`;
-        text += `    Where to Get: County Clerk / State Vital Statistics Office\n`;
-        text += `    URL: https://www.vitalchek.com\n`;
-        text += `    Estimated Fee: $10–$25 USD\n\n`;
+        bodyText += `• PROOF OF LEGAL NAME CHANGE:\n`;
+        bodyText += `  - Document: Official Marriage Certificate or Court Order\n`;
+        bodyText += `    Where to Get: County Clerk / State Vital Statistics Office\n`;
+        bodyText += `    URL: https://www.vitalchek.com\n\n`;
       }
 
       // Ancestor Docs
       for (let i = 1; i <= gens; i++) {
         if (i === gens) {
-          text += `• CANADIAN ANCESTOR (Generation ${i}):\n`;
-          text += `  - Document: Official Provincial/Territorial Birth Certificate or Canadian Citizenship/Naturalization Certificate\n`;
-          text += `    Where to Get: Vital Statistics Division of the Canadian Province of birth (or IRCC record search)\n`;
-          text += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/documents.html\n`;
-          text += `    Estimated Fee: $25–$50 CAD (varies by province)\n\n`;
+          bodyText += `• CANADIAN ANCESTOR (Generation ${i}):\n`;
+          bodyText += `  - Document: Official Provincial/Territorial Birth Certificate or Canadian Citizenship/Naturalization Certificate\n`;
+          bodyText += `    Where to Get: Vital Statistics Division of the Canadian Province of birth (or IRCC record search)\n`;
+          bodyText += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/documents.html\n\n`;
         } else {
-          text += `• INTERMEDIATE RELATIVE (Generation ${i}):\n`;
-          text += `  - Document: Certified Long-Form US Birth Certificate (proving legal line of parentage)\n`;
-          text += `    Where to Get: State Vital Statistics Department or VitalChek\n`;
-          text += `    URL: https://www.vitalchek.com\n`;
-          text += `    Estimated Fee: $15–$35 USD\n\n`;
+          bodyText += `• INTERMEDIATE RELATIVE (Generation ${i}):\n`;
+          bodyText += `  - Document: Certified Long-Form US Birth Certificate (proving legal line of parentage)\n`;
+          bodyText += `    Where to Get: State Vital Statistics Department or VitalChek\n`;
+          bodyText += `    URL: https://www.vitalchek.com\n\n`;
         }
       }
 
-      text += `--------------------------------------------------\n`;
-      text += `NEXT STEPS\n`;
-      text += `--------------------------------------------------\n`;
-      text += `Please start gathering the state and provincial records listed above. Once gathered, reply to this email so we can review the package before submission.\n\n`;
-      text += `Best regards,\n`;
-      text += `Citizenship Advisory Team`;
+      bodyText += `--------------------------------------------------\n`;
+      bodyText += `NEXT STEPS\n`;
+      bodyText += `--------------------------------------------------\n`;
+      bodyText += `Please start gathering the state and provincial records listed above. Once gathered, reply to this email so we can review the package before submission.\n\n`;
+      bodyText += `Best regards,\n`;
+      bodyText += `Citizenship Advisory Team`;
 
-      document.getElementById('emailBody').innerHTML = text;
+      rawTextContent += bodyText;
+
+      document.getElementById('emailBody').innerHTML = htmlHeader + bodyText;
       document.getElementById('resultsArea').style.display = 'block';
+
+      // Reset copy button state
+      const copyBtn = document.getElementById('copyBtn');
+      copyBtn.innerText = "📋 Copy Email Text";
+      copyBtn.style.backgroundColor = "#0056b3";
+    }
+
+    function copyEmailToClipboard() {
+      navigator.clipboard.writeText(rawTextContent).then(() => {
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.innerText = "✓ Copied!";
+        copyBtn.style.backgroundColor = "#28a745";
+        
+        setTimeout(() => {
+          copyBtn.innerText = "📋 Copy Email Text";
+          copyBtn.style.backgroundColor = "#0056b3";
+        }, 3000);
+      }).catch(err => {
+        alert("Failed to copy text. Please select and copy manually.");
+      });
     }
   </script>
 </body>
