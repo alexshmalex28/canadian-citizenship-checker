@@ -2,91 +2,192 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Canadian Citizenship by Descent Document Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canadian Citizenship Document Generator</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; }
-    .card { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-    button { background: #d92525; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    button:hover { background: #b01c1c; }
-    .doc-item { background: white; padding: 12px; border-left: 4px solid #d92525; margin-bottom: 10px; border-radius: 4px; }
-    a { color: #0066cc; text-decoration: none; font-weight: 500; }
-    a:hover { text-decoration: underline; }
+    body {
+      font-family: Arial, sans-serif;
+      color: #222222;
+      max-width: 850px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      background-color: #f4f6f8;
+    }
+    .form-card {
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #d92525;
+      color: #ffffff;
+      border: none;
+      padding: 12px 22px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #b01c1c;
+    }
+    .email-container {
+      background: #ffffff;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      padding: 30px;
+      font-family: Arial, sans-serif;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .email-header {
+      background: #eef2f5;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border: 1px solid #d0d7de;
+    }
+    .url-text {
+      color: #0056b3;
+      word-break: break-all;
+    }
   </style>
 </head>
 <body>
 
-  <h1>🇨🇦 Canadian Citizenship Document Generator</h1>
-  <p>Fill out the generational link back to your Canadian ancestor to generate your IRCC checklist and form links.</p>
+  <h2>🇨🇦 Canadian Citizenship Client Email Generator</h2>
+  <p>Fill in the client's information to generate a structured email with forms, official link URLs, exact document sources, and IRCC fees.</p>
 
-  <div class="card">
-    <label><strong>How many generations back is your Canadian ancestor?</strong></label><br><br>
-    <select id="generations">
-      <option value="1">Parent (1st Generation)</option>
-      <option value="2">Grandparent (2nd Generation)</option>
-      <option value="3">Great-Grandparent (3rd Generation)</option>
-    </select>
-    <br><br>
+  <div class="form-card">
+    <div class="form-group">
+      <label for="clientName">Client's Full Name:</label>
+      <input type="text" id="clientName" placeholder="e.g., John Smith">
+    </div>
 
-    <label><input type="checkbox" id="nameChange"> Has anyone in the direct lineage had a legal name change?</label>
-    <br><br>
+    <div class="form-group">
+      <label for="generations">How many generations back is the Canadian ancestor?</label>
+      <select id="generations">
+        <option value="1">Parent (1st Generation)</option>
+        <option value="2">Grandparent (2nd Generation)</option>
+        <option value="3">Great-Grandparent (3rd Generation)</option>
+      </select>
+    </div>
 
-    <button onclick="generateChecklist()">Generate Checklist & Links</button>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="nameChange"> Client or ancestor had a legal name change (e.g., marriage)
+      </label>
+    </div>
+
+    <button onclick="generateEmail()">Generate Client Email</button>
   </div>
 
-  <div id="results" style="display:none;">
-    <h2>📋 Your Generated Application Checklist</h2>
-    <div id="checklistOutput"></div>
+  <div id="resultsArea" style="display:none;">
+    <h3>Generated Email Output:</h3>
+    <div class="email-container" id="emailBody"></div>
   </div>
 
   <script>
-    function generateChecklist() {
+    function generateEmail() {
+      const name = document.getElementById('clientName').value.trim() || 'Client';
       const gens = parseInt(document.getElementById('generations').value);
       const nameChange = document.getElementById('nameChange').checked;
-      
-      let html = '<h3>1. Official IRCC Forms & Fees</h3>';
-      html += `<div class="doc-item">
-        <strong>Main Application Form:</strong> CIT 0001 (Application for a Citizenship Certificate)<br>
-        <a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/cit0001.html" target="_blank">📄 Download Official Form CIT 0001</a>
-      </div>`;
-      
-      html += `<div class="doc-item">
-        <strong>Government Filing Fee:</strong> $75 CAD per applicant<br>
-        <a href="https://www.cic.gc.ca/english/information/fees/index.asp" target="_blank">💳 Pay Fee via IRCC Portal</a>
-      </div>`;
 
-      html += '<h3>2. Required Documents to Obtain</h3>';
+      let text = `<div class="email-header"><strong>Subject:</strong> Action Required: Checklist & Forms for Your Canadian Citizenship Application</div>`;
       
-      // Applicant docs
-      html += `<div class="doc-item">
-        <strong>Applicant:</strong> Long-Form US Birth Certificate (listing parents' names)<br>
-        <a href="https://www.vitalchek.com" target="_blank">🔗 Order via VitalChek</a>
-      </div>`;
+      text += `Dear ${name},\n\n`;
+      text += `Thank you for reaching out regarding your application for a Canadian Citizenship Certificate (Proof of Citizenship).\n\n`;
+      text += `Based on your lineage (${gens} generation(s) back to your Canadian ancestor), below is the complete breakdown of the official IRCC forms to submit, government filing fees, and the exact documents you need to obtain along with where to get them.\n\n`;
+
+      text += `--------------------------------------------------\n`;
+      text += `1. OFFICIAL IRCC APPLICATION FORMS & FEES\n`;
+      text += `--------------------------------------------------\n\n`;
       
+      text += `• Main Application Form:\n`;
+      text += `  Form CIT 0001 (Application for a Citizenship Certificate)\n`;
+      text += `  Download URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/cit0001.html\n\n`;
+
+      text += `• IRCC Government Processing Fee:\n`;
+      text += `  Fee Amount: $75.00 CAD per applicant\n`;
+      text += `  Where to Pay: IRCC Official Pay Fee Portal\n`;
+      text += `  Payment URL: https://www.cic.gc.ca/english/information/fees/index.asp\n\n`;
+
+      text += `--------------------------------------------------\n`;
+      text += `2. REQUIRED SUPPORTING DOCUMENTS TO OBTAIN\n`;
+      text += `--------------------------------------------------\n\n`;
+
+      // Applicant Docs
+      text += `• APPLICANT IDENTIFICATION:\n`;
+      text += `  - Document: Long-Form US Birth Certificate (Must list parents' names)\n`;
+      text += `    Where to Get: State Department of Vital Statistics or online via VitalChek\n`;
+      text += `    URL: https://www.vitalchek.com\n`;
+      text += `    Estimated Fee: $15–$35 USD (varies by state)\n\n`;
+
+      text += `  - Document: Two (2) Primary Photo IDs (e.g., Unexpired US Passport & Driver's License)\n`;
+      text += `    Where to Get: US Department of State / Local State DMV\n`;
+      text += `    URL: https://travel.state.gov\n\n`;
+
+      text += `  - Document: Two (2) Official Canadian Citizenship Photos\n`;
+      text += `    Where to Get: Professional Photo Studio (Must strictly meet 50 mm x 70 mm IRCC specs)\n`;
+      text += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/preparation/take-photos.html\n`;
+      text += `    Estimated Fee: $15–$25 USD\n\n`;
+
       if (nameChange) {
-        html += `<div class="doc-item">
-          <strong>Applicant / Lineage:</strong> Official Proof of Legal Name Change (Marriage Certificate or Court Order)<br>
-          <a href="https://www.vitalchek.com" target="_blank">🔗 Order Vital Records</a>
-        </div>`;
+        text += `• PROOF OF LEGAL NAME CHANGE:\n`;
+        text += `  - Document: Official Marriage Certificate or Court Order\n`;
+        text += `    Where to Get: County Clerk / State Vital Statistics Office\n`;
+        text += `    URL: https://www.vitalchek.com\n`;
+        text += `    Estimated Fee: $10–$25 USD\n\n`;
       }
 
-      // Ancestor docs per generation
+      // Ancestor Docs
       for (let i = 1; i <= gens; i++) {
-        const label = i === gens ? "Canadian Ancestor Anchor" : `Intermediate Generation ${i}`;
         if (i === gens) {
-          html += `<div class="doc-item">
-            <strong>${label}:</strong> Provincial/Territorial Official Long-Form Birth Certificate or Naturalization Record<br>
-            <a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/documents.html" target="_blank">🇨🇦 IRCC Canadian Proof Guidelines</a>
-          </div>`;
+          text += `• CANADIAN ANCESTOR (Generation ${i}):\n`;
+          text += `  - Document: Official Provincial/Territorial Birth Certificate or Canadian Citizenship/Naturalization Certificate\n`;
+          text += `    Where to Get: Vital Statistics Division of the Canadian Province of birth (or IRCC record search)\n`;
+          text += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/documents.html\n`;
+          text += `    Estimated Fee: $25–$50 CAD (varies by province)\n\n`;
         } else {
-          html += `<div class="doc-item">
-            <strong>${label}:</strong> Long-Form US Birth Certificate (proving legal line of descent)<br>
-            <a href="https://www.vitalchek.com" target="_blank">🔗 Order via VitalChek</a>
-          </div>`;
+          text += `• INTERMEDIATE RELATIVE (Generation ${i}):\n`;
+          text += `  - Document: Certified Long-Form US Birth Certificate (proving legal line of parentage)\n`;
+          text += `    Where to Get: State Vital Statistics Department or VitalChek\n`;
+          text += `    URL: https://www.vitalchek.com\n`;
+          text += `    Estimated Fee: $15–$35 USD\n\n`;
         }
       }
 
-      document.getElementById('checklistOutput').innerHTML = html;
-      document.getElementById('results').style.display = 'block';
+      text += `--------------------------------------------------\n`;
+      text += `NEXT STEPS\n`;
+      text += `--------------------------------------------------\n`;
+      text += `Please start gathering the state and provincial records listed above. Once gathered, reply to this email so we can review the package before submission.\n\n`;
+      text += `Best regards,\n`;
+      text += `Citizenship Advisory Team`;
+
+      document.getElementById('emailBody').innerHTML = text;
+      document.getElementById('resultsArea').style.display = 'block';
     }
   </script>
 </body>
