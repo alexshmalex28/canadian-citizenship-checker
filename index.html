@@ -143,6 +143,7 @@
         <option value="1">Parent (1st Generation)</option>
         <option value="2">Grandparent (2nd Generation)</option>
         <option value="3">Great-Grandparent (3rd Generation)</option>
+        <option value="4">Great-Great-Grandparent (4th Generation)</option>
       </select>
     </div>
 
@@ -166,6 +167,16 @@
   <script>
     let rawTextContent = "";
 
+    function getGenerationLabel(genIndex) {
+      const labels = {
+        1: "Parent",
+        2: "Grandparent",
+        3: "Great-Grandparent",
+        4: "Great-Great-Grandparent"
+      };
+      return labels[genIndex] || `Generation ${genIndex}`;
+    }
+
     function generateEmail() {
       const name = document.getElementById('clientName').value.trim() || 'Client';
       const gens = parseInt(document.getElementById('generations').value);
@@ -179,7 +190,7 @@
       
       let bodyText = `Dear ${name},\n\n`;
       bodyText += `Thank you for reaching out regarding your application for a Canadian Citizenship Certificate (Proof of Citizenship).\n\n`;
-      bodyText += `Based on your lineage (${gens} generation(s) back to your Canadian ancestor), below is the complete breakdown of official IRCC application forms, updated photo requirements, and specific sources for obtaining all required documents.\n\n`;
+      bodyText += `Based on your lineage (${gens} generation(s) back to your Canadian ancestor - ${getGenerationLabel(gens)}), below is the complete breakdown of official IRCC application forms, updated photo requirements, and specific sources for obtaining all required documents.\n\n`;
 
       bodyText += `--------------------------------------------------\n`;
       bodyText += `1. OFFICIAL IRCC FORMS & SUBMISSION PORTAL\n`;
@@ -231,15 +242,16 @@
 
       // Ancestor Docs
       for (let i = 1; i <= gens; i++) {
+        const label = getGenerationLabel(i);
         if (i === gens) {
-          bodyText += `• CANADIAN ANCESTOR (Generation ${i}):\n`;
+          bodyText += `• CANADIAN ANCESTOR (${label.toUpperCase()} - Generation ${i}):\n`;
           bodyText += `  - Official Provincial/Territorial Birth Certificate OR Canadian Citizenship Certificate\n`;
           bodyText += `    Where to Request (Provincial Births): Vital Statistics Agency of the specific Canadian Province of birth\n`;
           bodyText += `    Provincial Directory URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/documents.html\n\n`;
           bodyText += `    Where to Request (Historical Canadian Record Search): IRCC Official Search of Citizenship Records Application\n`;
           bodyText += `    Search Portal URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/search-records/how-to-apply.html\n\n`;
         } else {
-          bodyText += `• INTERMEDIATE RELATIVE (Generation ${i}):\n`;
+          bodyText += `• INTERMEDIATE RELATIVE (${label.toUpperCase()} - Generation ${i}):\n`;
           bodyText += `  - Certified Long-Form US Birth Certificate (establishing line of descent)\n`;
           bodyText += `    Where to Request: State Department of Vital Statistics or online via VitalChek\n`;
           bodyText += `    Source URL: https://www.vitalchek.com\n\n`;
