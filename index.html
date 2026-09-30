@@ -7,93 +7,129 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      color: #222222;
-      max-width: 850px;
-      margin: 40px auto;
-      padding: 0 20px;
-      line-height: 1.6;
-      background-color: #f4f6f8;
+      font-size: 10pt;
+      color: #2c3e50;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 15px;
+      line-height: 1.4;
+      background-color: #f8f9fa;
+    }
+    h2 {
+      font-size: 14pt;
+      margin: 0 0 4px 0;
+      color: #1a252f;
+    }
+    p.subtitle {
+      font-size: 10pt;
+      color: #6c757d;
+      margin: 0 0 15px 0;
     }
     .form-card {
       background: #ffffff;
-      border: 1px solid #cccccc;
-      border-radius: 8px;
-      padding: 25px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      margin-bottom: 30px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
     }
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 10px;
     }
     label {
       font-weight: bold;
+      font-size: 10pt;
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     input[type="text"], select {
       width: 100%;
-      padding: 10px;
+      padding: 6px 10px;
       font-family: Arial, sans-serif;
-      font-size: 14px;
-      border: 1px solid #ccc;
+      font-size: 10pt;
+      border: 1px solid #cbd5e1;
       border-radius: 4px;
       box-sizing: border-box;
+      background-color: #f8fafc;
+    }
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      background-color: #ffffff;
+    }
+    .checkbox-label {
+      font-weight: normal;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .button-group {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn {
+      border: none;
+      padding: 8px 16px;
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
     }
     .btn-primary {
-      background-color: #d92525;
+      background-color: #dc2626;
       color: #ffffff;
-      border: none;
-      padding: 12px 22px;
-      font-size: 15px;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
     }
     .btn-primary:hover {
-      background-color: #b01c1c;
+      background-color: #b91c1c;
     }
     .btn-copy {
-      background-color: #0056b3;
+      background-color: #2563eb;
       color: #ffffff;
-      border: none;
-      padding: 12px 22px;
-      font-size: 15px;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
     }
     .btn-copy:hover {
-      background-color: #003d80;
+      background-color: #1d4ed8;
+    }
+    .results-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .results-card h3 {
+      font-size: 11pt;
+      margin: 0 0 10px 0;
+      color: #0f172a;
     }
     .email-container {
-      background: #ffffff;
-      border: 1px solid #d0d7de;
-      border-radius: 6px;
-      padding: 30px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 16px;
       font-family: Arial, sans-serif;
+      font-size: 10pt;
       white-space: pre-wrap;
       word-break: break-word;
+      color: #1e293b;
     }
     .email-header {
-      background: #eef2f5;
-      padding: 12px;
+      background: #e2e8f0;
+      padding: 8px 10px;
       border-radius: 4px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      border: 1px solid #d0d7de;
+      margin-bottom: 12px;
+      font-size: 10pt;
+      border: 1px solid #cbd5e1;
     }
   </style>
 </head>
 <body>
 
   <h2>🇨🇦 Canadian Citizenship Client Email Generator</h2>
-  <p>Fill in the client's details to generate an updated email containing exact IRCC photo specifications, official link URLs, and direct document search repositories.</p>
+  <p class="subtitle">Fill in the client's details to generate an updated email containing exact IRCC photo specifications, official link URLs, and direct document search repositories.</p>
 
   <div class="form-card">
     <div class="form-group">
@@ -111,18 +147,18 @@
     </div>
 
     <div class="form-group">
-      <label>
+      <label class="checkbox-label">
         <input type="checkbox" id="nameChange"> Client or ancestor had a legal name change (e.g., marriage)
       </label>
     </div>
 
     <div class="button-group">
-      <button class="btn-primary" onclick="generateEmail()">Generate Client Email</button>
-      <button class="btn-copy" id="copyBtn" onclick="copyEmailToClipboard()">📋 Copy Email Text</button>
+      <button class="btn btn-primary" onclick="generateEmail()">Generate Client Email</button>
+      <button class="btn btn-copy" id="copyBtn" onclick="copyEmailToClipboard()">📋 Copy Email Text</button>
     </div>
   </div>
 
-  <div id="resultsArea" style="display:none;">
+  <div id="resultsArea" class="results-card" style="display:none;">
     <h3>Generated Email Output:</h3>
     <div class="email-container" id="emailBody"></div>
   </div>
@@ -229,7 +265,7 @@
       // Reset copy button styling
       const copyBtn = document.getElementById('copyBtn');
       copyBtn.innerText = "📋 Copy Email Text";
-      copyBtn.style.backgroundColor = "#0056b3";
+      copyBtn.style.backgroundColor = "#2563eb";
     }
 
     function copyEmailToClipboard() {
@@ -240,11 +276,11 @@
       navigator.clipboard.writeText(rawTextContent).then(() => {
         const copyBtn = document.getElementById('copyBtn');
         copyBtn.innerText = "✓ Copied!";
-        copyBtn.style.backgroundColor = "#28a745";
+        copyBtn.style.backgroundColor = "#16a34a";
         
         setTimeout(() => {
           copyBtn.innerText = "📋 Copy Email Text";
-          copyBtn.style.backgroundColor = "#0056b3";
+          copyBtn.style.backgroundColor = "#2563eb";
         }, 3000);
       }).catch(err => {
         alert("Failed to copy automatically. Please select the text on screen and copy manually.");
