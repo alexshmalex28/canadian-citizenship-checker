@@ -93,7 +93,7 @@
 <body>
 
   <h2>🇨🇦 Canadian Citizenship Client Email Generator</h2>
-  <p>Fill in the client's information to generate a structured email with forms, official link URLs, and exact document sources.</p>
+  <p>Fill in the client's details to generate an updated email containing exact IRCC photo specifications, official link URLs, and direct document search repositories.</p>
 
   <div class="form-card">
     <div class="form-group">
@@ -136,70 +136,88 @@
       const nameChange = document.getElementById('nameChange').checked;
 
       // HTML view header
-      let htmlHeader = `<div class="email-header"><strong>Subject:</strong> Action Required: Checklist & Forms for Your Canadian Citizenship Application</div>`;
+      let htmlHeader = `<div class="email-header"><strong>Subject:</strong> Checklist & Updated IRCC Guidelines for Your Canadian Citizenship Application</div>`;
       
       // Plain text for clipboard
-      rawTextContent = `Subject: Action Required: Checklist & Forms for Your Canadian Citizenship Application\n\n`;
+      rawTextContent = `Subject: Checklist & Updated IRCC Guidelines for Your Canadian Citizenship Application\n\n`;
       
       let bodyText = `Dear ${name},\n\n`;
       bodyText += `Thank you for reaching out regarding your application for a Canadian Citizenship Certificate (Proof of Citizenship).\n\n`;
-      bodyText += `Based on your lineage (${gens} generation(s) back to your Canadian ancestor), below is the complete breakdown of the official IRCC forms to submit and the exact documents you need to obtain along with where to get them.\n\n`;
+      bodyText += `Based on your lineage (${gens} generation(s) back to your Canadian ancestor), below is the complete breakdown of official IRCC application forms, updated photo requirements, and specific sources for obtaining all required documents.\n\n`;
 
       bodyText += `--------------------------------------------------\n`;
-      bodyText += `1. OFFICIAL IRCC APPLICATION FORMS & PAYMENT PORTAL\n`;
+      bodyText += `1. OFFICIAL IRCC FORMS & SUBMISSION PORTAL\n`;
       bodyText += `--------------------------------------------------\n\n`;
       
-      bodyText += `• Main Application Form:\n`;
+      bodyText += `• Application Form:\n`;
       bodyText += `  Form CIT 0001 (Application for a Citizenship Certificate)\n`;
       bodyText += `  Download URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/cit0001.html\n\n`;
 
-      bodyText += `• IRCC Official Fee Payment Portal:\n`;
-      bodyText += `  Payment URL: https://www.cic.gc.ca/english/information/fees/index.asp\n\n`;
+      bodyText += `• IRCC Official Online Application & Fee Payment Portal:\n`;
+      bodyText += `  Portal URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/apply.html\n\n`;
 
       bodyText += `--------------------------------------------------\n`;
-      bodyText += `2. REQUIRED SUPPORTING DOCUMENTS TO OBTAIN\n`;
+      bodyText += `2. UPDATED IRCC PHOTO SPECIFICATIONS\n`;
+      bodyText += `--------------------------------------------------\n\n`;
+      bodyText += `Important Note: US passport photos do NOT meet Canadian specifications. Please provide these guidelines to your professional studio photographer:\n\n`;
+      
+      bodyText += `• FOR ONLINE SUBMISSIONS:\n`;
+      bodyText += `  - File Format: .JPEG or .JPG format\n`;
+      bodyText += `  - Image Aspect Ratio: 3:2 in portrait orientation\n`;
+      bodyText += `  - Resolution: Minimum 1200 x 1800 pixels (Max: 3000 x 4500 pixels)\n`;
+      bodyText += `  - File Size: Between 200 KB and 5 MB\n`;
+      bodyText += `  - Photo Guide URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-passports/photos.html\n\n`;
+
+      bodyText += `• FOR PAPER SUBMISSIONS:\n`;
+      bodyText += `  - Physical Dimensions: 50 mm wide by 70 mm high (2" x 2-3/4")\n`;
+      bodyText += `  - Back of Photo Details: Must show photographer name, complete studio address, and date taken\n\n`;
+
+      bodyText += `--------------------------------------------------\n`;
+      bodyText += `3. REQUIRED SUPPORTING DOCUMENTS & SOURCES TO OBTAIN\n`;
       bodyText += `--------------------------------------------------\n\n`;
 
       // Applicant Docs
       bodyText += `• APPLICANT IDENTIFICATION:\n`;
-      bodyText += `  - Document: Long-Form US Birth Certificate (Must list parents' names)\n`;
-      bodyText += `    Where to Get: State Department of Vital Statistics or online via VitalChek\n`;
-      bodyText += `    URL: https://www.vitalchek.com\n\n`;
+      bodyText += `  - Long-Form US Birth Certificate (Must list parents' full names)\n`;
+      bodyText += `    Where to Request: State Department of Health / Vital Statistics or online via VitalChek\n`;
+      bodyText += `    Source URL: https://www.vitalchek.com\n\n`;
 
-      bodyText += `  - Document: Two (2) Primary Photo IDs (e.g., Unexpired US Passport & Driver's License)\n`;
-      bodyText += `    Where to Get: US Department of State / Local State DMV\n`;
-      bodyText += `    URL: https://travel.state.gov\n\n`;
-
-      bodyText += `  - Document: Two (2) Official Canadian Citizenship Photos\n`;
-      bodyText += `    Where to Get: Professional Photo Studio (Must strictly meet 50 mm x 70 mm IRCC specs)\n`;
-      bodyText += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/preparation/take-photos.html\n\n`;
+      bodyText += `  - Two (2) Primary Identity Documents (e.g., Unexpired US Passport & Driver's License)\n`;
+      bodyText += `    Where to Request: US Department of State / Local State DMV\n`;
+      bodyText += `    Source URL: https://travel.state.gov\n\n`;
 
       if (nameChange) {
         bodyText += `• PROOF OF LEGAL NAME CHANGE:\n`;
-        bodyText += `  - Document: Official Marriage Certificate or Court Order\n`;
-        bodyText += `    Where to Get: County Clerk / State Vital Statistics Office\n`;
-        bodyText += `    URL: https://www.vitalchek.com\n\n`;
+        bodyText += `  - Official Marriage Certificate, Divorce Decree, or Legal Court Order\n`;
+        bodyText += `    Where to Request: County Clerk / State Vital Records Office\n`;
+        bodyText += `    Source URL: https://www.vitalchek.com\n\n`;
       }
 
       // Ancestor Docs
       for (let i = 1; i <= gens; i++) {
         if (i === gens) {
           bodyText += `• CANADIAN ANCESTOR (Generation ${i}):\n`;
-          bodyText += `  - Document: Official Provincial/Territorial Birth Certificate or Canadian Citizenship/Naturalization Certificate\n`;
-          bodyText += `    Where to Get: Vital Statistics Division of the Canadian Province of birth (or IRCC record search)\n`;
-          bodyText += `    URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/documents.html\n\n`;
+          bodyText += `  - Official Provincial/Territorial Birth Certificate OR Canadian Citizenship Certificate\n`;
+          bodyText += `    Where to Request (Provincial Births): Vital Statistics Agency of the specific Canadian Province of birth\n`;
+          bodyText += `    Provincial Directory URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/documents.html\n\n`;
+          bodyText += `    Where to Request (Historical Canadian Record Search): IRCC Official Search of Citizenship Records Application\n`;
+          bodyText += `    Search Portal URL: https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-citizenship/proof-citizenship/search-records/how-to-apply.html\n\n`;
         } else {
           bodyText += `• INTERMEDIATE RELATIVE (Generation ${i}):\n`;
-          bodyText += `  - Document: Certified Long-Form US Birth Certificate (proving legal line of parentage)\n`;
-          bodyText += `    Where to Get: State Vital Statistics Department or VitalChek\n`;
-          bodyText += `    URL: https://www.vitalchek.com\n\n`;
+          bodyText += `  - Certified Long-Form US Birth Certificate (establishing line of descent)\n`;
+          bodyText += `    Where to Request: State Department of Vital Statistics or online via VitalChek\n`;
+          bodyText += `    Source URL: https://www.vitalchek.com\n\n`;
+          
+          bodyText += `  - Optional Ancestor Naturalization Searches (if applicable):\n`;
+          bodyText += `    Where to Request: USCIS Genealogy Program or US National Archives (NARA)\n`;
+          bodyText += `    Source URL: https://www.uscis.gov/genealogy\n\n`;
         }
       }
 
       bodyText += `--------------------------------------------------\n`;
       bodyText += `NEXT STEPS\n`;
       bodyText += `--------------------------------------------------\n`;
-      bodyText += `Please start gathering the state and provincial records listed above. Once gathered, reply to this email so we can review the package before submission.\n\n`;
+      bodyText += `Please begin gathering the vital records listed above. Once collected, reply to this email so we can review the documents before submitting your package to IRCC.\n\n`;
       bodyText += `Best regards,\n`;
       bodyText += `Citizenship Advisory Team`;
 
@@ -216,7 +234,7 @@
 
     function copyEmailToClipboard() {
       if (!rawTextContent) {
-        generateEmail(); // Automatically generates if clicked before pressing Generate
+        generateEmail();
       }
       
       navigator.clipboard.writeText(rawTextContent).then(() => {
